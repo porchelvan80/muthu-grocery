@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muthu Grocery Store - Billing System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shop"></i> <span class="brand-name">Muthu Grocery</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home"><i class="bi bi-house-door"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products"><i class="bi bi-grid"></i> Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link cart-link" href="#cart" onclick="toggleCart()">
+                            <i class="bi bi-cart3"></i> Cart
+                            <span class="cart-badge" id="cartBadge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#billing"><i class="bi bi-receipt-cutoff"></i> Billing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#priceManagement"><i class="bi bi-currency-rupee"></i> Price Management</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Premium Grocery Store</h1>
+                <p class="hero-subtitle">Fresh Vegetables & Quality Maligai Products</p>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Fresh Daily</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Best Prices</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>Quality Assured</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Management Section -->
+    <section id="priceManagement" class="price-management-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title"><i class="bi bi-currency-rupee"></i> Daily Price Management</h2>
+                <p class="section-subtitle">Update vegetable prices for today</p>
+            </div>
+            
+            <div class="billing-card">
+                <div class="price-management-header">
+                    <div>
+                        <p class="mb-1"><strong>Today's Date:</strong> <span id="currentDate"></span></p>
+                        <small class="text-muted">Last Updated: <span id="lastUpdated"></span></small>
+                    </div>
+                    <button class="btn btn-success" onclick="saveAllPrices()">
+                        <i class="bi bi-save"></i> Save All Prices
+                    </button>
+                </div>
+                
+                <div class="price-table-container">
+                    <table class="table price-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Vegetable Name</th>
+                                <th>Unit</th>
+                                <th>Current Price (₹)</th>
+                                <th>New Price (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="priceTableBody">
+                            <!-- Price rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Products</h2>
+                <p class="section-subtitle">Browse our wide range of fresh vegetables and grocery items</p>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-filter-bar">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search products...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="categoryFilter" class="form-select">
+                            <option value="all">All Categories</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="maligai">Maligai (Groceries)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Tabs -->
+            <ul class="nav nav-tabs category-tabs" id="productTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="vegetables-tab" data-bs-toggle="tab" data-bs-target="#vegetables" type="button">
+                        <i class="bi bi-flower1"></i> Vegetables
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="maligai-tab" data-bs-toggle="tab" data-bs-target="#maligai" type="button">
+                        <i class="bi bi-basket"></i> Maligai (Groceries)
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Products Grid -->
+            <div class="tab-content" id="productTabsContent">
+                <!-- Vegetables Tab -->
+                <div class="tab-pane fade show active" id="vegetables" role="tabpanel">
+                    <div class="row g-4" id="vegetablesGrid">
+                        <!-- Vegetables will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Maligai Tab -->
+                <div class="tab-pane fade" id="maligai" role="tabpanel">
+                    <div class="row g-4" id="maligaiGrid">
+                        <!-- Maligai products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h5><i class="bi bi-cart3"></i> Shopping Cart</h5>
+            <button class="btn-close-cart" onclick="toggleCart()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="cart-body" id="cartBody">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">₹0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>GST (5%):</span>
+                    <span id="cartGST">₹0.00</span>
+                </div>
+                <div class="total-row final-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">₹0.00</span>
+                </div>
+            </div>
+            <button class="btn-checkout" onclick="proceedToBilling()">
+                <i class="bi bi-arrow-right-circle"></i> Proceed to Billing
+            </button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- Billing Section -->
+    <section id="billing" class="billing-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Billing & Invoice</h2>
+                <p class="section-subtitle">Complete your purchase and generate invoice</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Customer Details -->
+                <div class="col-lg-4">
+                    <div class="billing-card">
+                        <h5 class="card-title"><i class="bi bi-person-circle"></i> Customer Details</h5>
+                        <form id="customerForm">
+                            <div class="mb-3">
+                                <label class="form-label">Customer Name *</label>
+                                <input type="text" class="form-control" id="customerName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="customerPhone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="customerEmail">
+                            </div>
+            <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea class="form-control" id="customerAddress" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">GST Number</label>
+                <input type="text" class="form-control" id="customerGST" placeholder="GST123456789">
+            </div>
+        </form>
+    </div>
+</div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-8">
+                    <div class="billing-card">
+                        <h5 class="card-title"><i class="bi bi-receipt"></i> Order Summary</h5>
+                        <div class="order-table-container">
+                            <table class="table order-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderTableBody">
+                                    <!-- Order items will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="order-summary-footer">
+                            <div class="summary-row">
+                                <span>Subtotal:</span>
+                                <span id="orderSubtotal">₹0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>GST (5%):</span>
+                                <span id="orderGST">₹0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Discount:</span>
+                                <div class="discount-input">
+                                    <input type="number" class="form-control form-control-sm" id="discountInput" 
+                                           placeholder="0" min="0" max="100" onchange="calculateTotal()">
+                                    <span>%</span>
+                                </div>
+                            </div>
+                            <div class="summary-row final-total">
+                                <span>Grand Total:</span>
+                                <span id="orderTotal">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="billing-actions">
+                            <button class="btn btn-secondary" onclick="clearCart()">
+                                <i class="bi bi-trash"></i> Clear Cart
+                            </button>
+                            <button class="btn btn-primary" onclick="generateInvoice()">
+                                <i class="bi bi-receipt-cutoff"></i> Generate Invoice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Invoice Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-receipt"></i> Invoice</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="invoiceContent">
+                    <!-- Invoice content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="printInvoice()">
+                        <i class="bi bi-printer"></i> Print Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Premium Grocery Store</h5>
+                    <p>Your trusted partner for fresh vegetables and quality grocery products.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p><i class="bi bi-geo-alt"></i> 123 Main Street, City, State - 12345</p>
+                    <p><i class="bi bi-telephone"></i> +91 98765 43210</p>
+                    <p><i class="bi bi-envelope"></i> info@premiumgrocery.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Business Hours</h5>
+                    <p>Monday - Saturday: 7:00 AM - 10:00 PM</p>
+                    <p>Sunday: 8:00 AM - 9:00 PM</p>
+                    <p>GSTIN: GST123456789</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Premium Grocery Store. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
